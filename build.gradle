@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.floodeer.hytale'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libraries'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
+dependencies {
+    compileOnly name: 'HytaleServer'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+
+tasks.test {
+    useJUnitPlatform()
+}

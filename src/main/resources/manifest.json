@@ -1,0 +1,19 @@
+{
+  "Group": "com.floodeer.plugins",
+  "Name": "Configuration",
+  "Version": "1.0.0",
+  "Description": "Easy to use plugin config example.",
+  "Authors": [
+    {
+      "Name": "Floodeer",
+      "Email": "floodeersupport@gmail.com",
+      "Url": "https://github.com/Floodeer"
+    }
+  ],
+  "Website": "https://github.com/Floodeer",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "com.floodeer.plugins.Main"
+}
