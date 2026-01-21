@@ -59,23 +59,20 @@ public final class PluginConfiguration<T> {
 
     public PluginConfiguration(Class<T> type, Supplier<T> factory) {
 
-        BuilderCodec.Builder<T> builder =
-                BuilderCodec.builder(type, factory);
+        BuilderCodec.Builder<T> builder = BuilderCodec.builder(type, factory);
 
         for (Field field : type.getDeclaredFields()) {
             ConfigKey key = field.getAnnotation(ConfigKey.class);
             if (key == null) continue;
 
-            Codec fieldCodec = CODECS.get(field.getType());
+            Codec<?> fieldCodec = CODECS.get(field.getType());
             if (fieldCodec == null) {
-                throw new IllegalStateException("No codec for field type: " + field.getType().getName()
-                );
+                throw new IllegalStateException("No codec for field type: " + field.getType().getName());
             }
 
             field.setAccessible(true);
 
-            builder.append(
-                    new KeyedCodec(key.value(), fieldCodec),
+            builder.append(new KeyedCodec(key.value(), fieldCodec),
                     (cfg, v) -> {
                         try {
                             field.set(cfg, v);

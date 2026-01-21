@@ -2,12 +2,14 @@ package com.floodeer.plugins;
 
 import com.floodeer.plugins.configuration.ConfigKey;
 import com.floodeer.plugins.configuration.PluginConfiguration;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.util.Config;
 
 import javax.annotation.Nonnull;
-import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
@@ -22,21 +24,22 @@ public class Main extends JavaPlugin {
     protected void setup() {
         this.config.save();
 
-        ConfigExample plConfig = config.get();
+        getCommandRegistry().registerCommand(new CommandBase("reloadconfig", "Reloads the config") {
+            @Override
+            protected void executeSync(@Nonnull CommandContext context) {
+                config.load();
 
-        getLogger().at(Level.INFO).log("String: " + plConfig.testString);
-        getLogger().at(Level.INFO).log("Integer: " + plConfig.testInteger);
-        getLogger().at(Level.INFO).log("Boolean: " + plConfig.testBoolean);
+                context.sendMessage(Message.raw("String: " + config.get().testString));
+                context.sendMessage(Message.raw("Integer: " + config.get().testInteger));
+                context.sendMessage(Message.raw("Boolean: " + config.get().testBoolean));
+                context.sendMessage(Message.raw("Double value: " + config.get().doubleTest));
 
-        getLogger().at(Level.INFO).log("Array test: ");
-        for(String s : plConfig.arrayTest) {
-            getLogger().at(Level.INFO).log(s);
-        }
-    }
-
-    @Override
-    protected void shutdown() {
-
+                context.sendMessage(Message.raw("Array test:"));
+                for (String s : config.get().arrayTest) {
+                    context.sendMessage(Message.raw(s));
+                }
+            }
+        });
     }
 
     private static class ConfigExample {
@@ -51,6 +54,14 @@ public class Main extends JavaPlugin {
 
         @ConfigKey("Array-Test")
         public String[] arrayTest = { "A", "B", "C", "D"};
+
+        @ConfigKey("Double-Test")
+        public double doubleTest = 3.14;
+    }
+
+
+    @Override
+    protected void shutdown() {
 
     }
 }
